@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="CSS/style.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+  background-color:antiquewhite;
+ 
+  margin: 30px;
+       
+}
+    </style>
+    
+</head>
+<body>
+  <h1>
+    TODO APP
+  </h1>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card text-center">
+          <div class="card-body">
+            <form id="ToDo">
+              <div class="mb-3">
+                <label for="task" class="form-label">Add your task</label>
+                <input
+                  type="text"
+                  name="task"
+                  id="task"
+                  class="form-control"
+                  placeholder="Enter your task here"
+                  aria-describedby="helpId"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label"
+                  >Description</label
+                >
+                <textarea
+                  class="form-control"
+                  id="description"
+                  name="description"
+                  placeholder="Enter description here"
+                  rows="3"
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                class="btn rounded-pill btn-success btn-lg"
+              >
+                Add task
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5>PENDING TASKS</h5>
+            <ul id="pending_tasks" class="list-group"></ul>
+            <hr />
+            <h5>COMPLETED TASKS</h5>
+            <ul id="completed_tasks" class="list-group"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+    <script>
+        document.getElementById('ToDo').addEventListener('submit', function(event) {
+            event.preventDefault();
+            add_task();
+        });
+
+        function add_task() {
+            const taskInput = document.getElementById('task');
+            const taskText = taskInput.value.trim();
+
+            if (taskText !== '') {
+                const task = {
+                    text: taskText,
+                    timestamp: new Date(),
+                    completed: false
+                };
+
+                addTaskToList(task, 'pending_tasks');
+                taskInput.value = '';
+            }
+        }
+
+        function addTaskToList(task, listId) {
+            const taskElement = document.createElement('li');
+            taskElement.classList.add('list-group-item');
+            taskElement.textContent = `${task.text} - ${task.timestamp.toLocaleString()}`;
+
+            const completeButton = document.createElement('button');
+            completeButton.classList.add('btn', 'btn-success', 'btn-sm', 'float-right', 'mr-2');
+            completeButton.textContent = 'Complete';
+            completeButton.addEventListener('click', function() {
+                completeTask(task, taskElement, listId);
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'float-right');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', function() {
+                delete_task(task, taskElement, listId);
+            });
+
+            taskElement.appendChild(completeButton);
+            taskElement.appendChild(deleteButton);
+
+            document.getElementById(listId).appendChild(taskElement);
+        }
+
+        function completeTask(task, taskElement, listId) {
+            task.completed = true;
+            taskElement.classList.add('text-decoration-line-through');
+            document.getElementById('completed_tasks').appendChild(taskElement);
+        }
+
+        function delete_task(task, taskElement, listId) {
+            taskElement.remove();
+        }
+    </script>
+</body>
+</html>
+
+
